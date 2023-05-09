@@ -1,0 +1,60 @@
+body
+{
+    max-height: max-content;
+}
+h3{
+    text-align: center;
+}
+form 
+{
+    
+   
+    align-items: center;
+    background-color: #b8daff;
+    color: black;
+    border: 3px solid #007bff;
+    border-radius: 7px;
+    width: 50%;
+    
+    
+    padding: 20px;
+    margin-left: 25%;
+    margin-top: 5%;
+}
+
+input{
+    border: none;
+    border-radius: 3px;
+   
+    padding: 2%;
+    width: 100%;
+}
+.container{
+    width: 100%;
+      
+}
+.inputBoxNew{
+    margin: 20px;
+}
+label{
+    color: rgb(0, 0, 0);
+    font-weight: bold;
+   
+}
+.assitem {
+    width: 32%;
+    
+    background-color: #87CEEB;
+    color: black;
+    border: 3px solid rgb(255, 255, 255);
+    border-radius: 7px;
+    margin: 5px;
+    
+    padding: 3px;
+    text-align: center;
+    font-size: large;
+    display: inline-block;
+    font-weight: bold;
+    
+  }
+ 
