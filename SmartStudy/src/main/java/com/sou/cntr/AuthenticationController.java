@@ -24,6 +24,7 @@ import com.sou.model.User;
 import com.sou.service.ProjectAdminService;
 import com.sou.service.StudentService;
 import com.sou.service.TeacherService;
+import com.sou.service.UserJWTService;
 
 @Controller
 @CrossOrigin(value= {"http://localhost:3000"})
@@ -35,22 +36,25 @@ public class AuthenticationController {
 	private TeacherService tserv;
 	@Autowired
 	private ProjectAdminService pserv;
+	@Autowired
+	private UserJWTService userv;
 	
 	@PostMapping(value = {"/student/login"})
-	public ResponseEntity<?> studentCheck(@RequestBody User u,HttpServletRequest request) {
+	public ResponseEntity<?> studentCheck(@RequestBody User u) {
 		
 		List<Student> lst=sserv.getAll();
 		System.out.println(u);
 		System.out.println(lst);
 		for(Student s:lst)
 		{
-			if(s.getEmail().compareTo(u.getEmail())==0 && s.getPassword().compareTo(u.getPassword())==0)
+			System.out.println(s.getEmail()+" "+s.getPassword()+" "+u.getEmail()+" "+u.getPassword());
+			if(s.getEmail().equals(u.getEmail()) && s.getPassword().equals(u.getPassword()))
 			{
-				HttpSession session = request.getSession();
-				session.setAttribute("id",s.getStudentID());
-				
-				System.out.println(s.getStudentID()+" "+session.getAttribute("id"));
-				session.setAttribute("password",s.getPassword());
+//				HttpSession session = request.getSession();
+//				session.setAttribute("id",s.getStudentID());
+//				
+//				System.out.println(s.getStudentID()+" "+session.getAttribute("id"));
+//				session.setAttribute("password",s.getPassword());
 				return new ResponseEntity<>(s, HttpStatus.OK);
 			}
 			

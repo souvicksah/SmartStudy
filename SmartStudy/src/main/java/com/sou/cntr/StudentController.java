@@ -3,10 +3,12 @@ package com.sou.cntr;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 
 import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
 
+import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -19,20 +21,26 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.razorpay.Order;
+import com.razorpay.RazorpayClient;
+import com.razorpay.RazorpayException;
 import com.sou.model.Assignments;
 import com.sou.model.Courses;
 import com.sou.model.Internships;
 import com.sou.model.Orders;
 import com.sou.model.Rewards;
 import com.sou.model.Student;
+import com.sou.model.UserJWT;
 import com.sou.service.AssignmentsService;
 import com.sou.service.CoursesService;
 import com.sou.service.InternshipsService;
 import com.sou.service.OrdersService;
 import com.sou.service.RewardsService;
 import com.sou.service.StudentService;
+import com.sou.service.UserJWTService;
 
 @RestController
 @RequestMapping("/student")
@@ -51,12 +59,19 @@ public class StudentController {
 	private InternshipsService iserv;
 	@Autowired
 	private OrdersService oserv;
+	@Autowired
+	private UserJWTService userv;
 	
 //	http://localhost:8080/student/signup
 	@PostMapping(value = {"/signup"})
-	public ResponseEntity<?> studentAddForm(@RequestBody Student s,HttpSession session) {
+	public ResponseEntity<?> studentAddForm(@RequestBody Student s) {
 //		if(session.getAttribute("id")==null) {
 		sserv.add(s);
+		UserJWT userjwt=new UserJWT();
+		userjwt.setRole("Student");
+		userjwt.setPassword(s.getPassword());
+		userjwt.setUseremail(s.getEmail());
+		userv.register(userjwt);
 		System.out.println(s);
 		Rewards r =new Rewards();
 		r.setRewardsID(s.getStudentID());
@@ -205,5 +220,40 @@ public class StudentController {
 					
 					return new ResponseEntity<>(s, HttpStatus.OK);
 						
+				}
+				@PostMapping(value= {"/paynow/cre"})
+				@ResponseBody()
+				public String createOrder(@RequestBody Map<String, Object> data) throws RazorpayException {
+					
+					System.out.println(data);
+					int amt =Integer.parseInt(data.get("amount").toString());
+					
+						var client =new RazorpayClient("rzp_test_0op6Uisax8F6uF", "FBWJXPHg6IOulx5GDTwrvbUT");
+						
+						JSONObject ob = new JSONObject();
+						ob.put("amount", amt*100);
+						ob.put("currency", "INR");
+						ob.put("payment_capture", 1);
+						ob.put("receipt", "txn_235425");
+						
+						//create order
+						
+						Order order = client.orders.create(ob);
+						
+						//System.out.print(order);
+				
+						//System.out.print("Payment executed");
+					return order.toString();
+				}
+				//forgot password
+				//${BASE_URL}/forgotpassword/${email}/${pwd}`
+				@PostMapping(value= {"/forgotpassword/{email}/{password}"})
+				public Student forgotUpdatePassword(@PathVariable(value="email") String email, @PathVariable(value="password") String password)
+				{
+					Student s = sserv.getStudentbyEmail(email, password);
+					s.setPassword(password);
+				    sserv.add(s);
+					
+					return s;
 				}
 }

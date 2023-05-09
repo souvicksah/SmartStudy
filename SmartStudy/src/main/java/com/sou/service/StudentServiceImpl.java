@@ -53,4 +53,10 @@ public class StudentServiceImpl implements StudentService{
 		return lst;
 	}
 
+	@Override
+	public Student getStudentbyEmail(String email,String pwd) {
+		// TODO Auto-generated method stub
+		return studentdao.getInfoByEmail(email);
+	}
+
 }

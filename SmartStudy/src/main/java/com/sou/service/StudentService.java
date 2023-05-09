@@ -11,4 +11,5 @@ public interface StudentService {
 	void removeById(int id);
 	Student getById(int id);
 	List<Student> getAll();
+	Student getStudentbyEmail(String email,String pwd);
 }

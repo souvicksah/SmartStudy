@@ -13,4 +13,5 @@ public interface TeacherService {
 	Teacher getById(int id);
 	List<Teacher> getAll();
 	List<Courses> getCoursesById(int id);
+	Teacher getEmailbyTeacher(String email);
 }

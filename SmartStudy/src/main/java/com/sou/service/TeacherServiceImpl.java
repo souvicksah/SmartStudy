@@ -66,4 +66,10 @@ public class TeacherServiceImpl implements TeacherService{
 		return coursesdao.getCourseByID(id);
 	}
 
+	@Override
+	public Teacher getEmailbyTeacher(String email) {
+		// TODO Auto-generated method stub
+		return teacherdao.getInfoByEmail(email);
+	}
+
 }

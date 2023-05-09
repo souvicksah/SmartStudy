@@ -11,7 +11,7 @@ import org.springframework.stereotype.Repository;
 import com.sou.model.Courses;
 
 @Repository
-public interface CoursesDao extends CrudRepository<Courses, Integer>, JpaRepository<Courses, Integer>{
+public interface CoursesDao extends JpaRepository<Courses, Integer>{
 
 //	@Query("SELECT * FROM Courses c WHERE c.teacherid = ?1")
 	@Query(value="SELECT * FROM Courses WHERE teacher_teacherid= :teacher_id", nativeQuery=true)

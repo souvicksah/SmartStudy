@@ -25,12 +25,14 @@ import com.sou.model.Orders;
 import com.sou.model.Rewards;
 import com.sou.model.Student;
 import com.sou.model.Teacher;
+import com.sou.model.UserJWT;
 import com.sou.service.AssignmentsService;
 import com.sou.service.CoursesService;
 import com.sou.service.OrdersService;
 import com.sou.service.RewardsService;
 import com.sou.service.StudentService;
 import com.sou.service.TeacherService;
+import com.sou.service.UserJWTService;
 
 @RestController
 @RequestMapping("/teacher")
@@ -43,6 +45,8 @@ public class TeacherController {
 	private CoursesService cserv;
 	@Autowired
 	private StudentService sserv;
+	@Autowired
+	private UserJWTService userv;
 	
 	@Autowired
 	private AssignmentsService aserv;
@@ -52,9 +56,16 @@ public class TeacherController {
 	private OrdersService oserv;
 	
 	
+	
 	@PostMapping(value = {"/signup"})
 	public Teacher teacherAddForm(@RequestBody Teacher t) {
 		tserv.add(t);
+		UserJWT userjwt=new UserJWT();
+		userjwt.setPassword(t.getPassword());
+		userjwt.setUseremail(t.getEmail());
+		userjwt.setRole("Teacher");
+		userv.register(userjwt);
+		
 		return t;
 	}
 	@GetMapping(value = {"/teachergetAll"})
@@ -178,6 +189,17 @@ public class TeacherController {
 		@PostMapping(value = {"/editprofile"})
 		public Teacher teacherUpdateForm(@RequestBody Teacher t) {
 			tserv.add(t);
+			return t;
+		}
+		//forgot password
+		//${BASE_URL}/forgotpassword/${email}/${pwd}`
+		@PostMapping(value= {"/forgotpassword/{email}/{password}"})
+		public Teacher forgotUpdatePassword(@PathVariable(value="email") String email, @PathVariable(value="password") String password)
+		{
+			Teacher t = tserv.getEmailbyTeacher(email);
+			t.setPassword(password);
+		    tserv.add(t);
+			
 			return t;
 		}
 
